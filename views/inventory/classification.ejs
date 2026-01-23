@@ -1,0 +1,18 @@
+<% /* =========================
+   Titre du contenu
+   ========================= */ %>
+<% if (title) { %>
+  <h1><%= title %></h1>
+<% } else { %>
+  <% res.redirect('/') %>
+<% } %>
+
+<% /* =========================
+   Bloc de messages (désactivé pour l’instant)
+   ========================= */ %>
+<%# messages() %>
+
+<% /* =========================
+   Affichage des articles d’inventaire
+   ========================= */ %>
+<%- grid %>
