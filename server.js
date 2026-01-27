@@ -9,11 +9,14 @@
 const inventoryRoute = require("./routes/inventoryRoute")
 const baseController = require("./controllers/baseController")
 const utilities = require("./utilities/")
+const errorRoute = require("./routes/errorRoute")
 const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
 require("dotenv").config()
 const app = express()
 const staticRoutes = require("./routes/static")
+const path = require("path")
+
 
 /* ***********************
  * View Engine and Layout
@@ -21,6 +24,16 @@ const staticRoutes = require("./routes/static")
 app.set("view engine", "ejs")
 app.use(expressLayouts)
 app.set("layout", "./layouts/layout")
+
+/* ***********************
+ * Static Files Middleware
+ *************************/
+app.use(express.static("public"))
+
+/* ***********************
+ * Middleware
+ *************************/
+app.use(express.static(path.join(__dirname, "public")))
 
 /* ***********************
  * Routes
@@ -35,6 +48,8 @@ app.use("/inv", inventoryRoute)
 // static routes
 app.use(staticRoutes)
 
+// error route
+app.use("/error", errorRoute)
 
 // File Not Found Route - must be last route in list
 app.use(async (req, res, next) => {

@@ -172,6 +172,92 @@
 }
 
 
+/* ===== Inventory Classification Page ===== */
+
+#inv-display {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+#inv-display li {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 1rem;
+  background: #fff;
+  text-align: center;
+}
+
+#inv-display img {
+  width: 100%;
+  height: auto;
+  max-height: 160px;
+  object-fit: contain;
+}
+
+.namePrice h2 {
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+}
+
+.namePrice span {
+  font-weight: bold;
+  color: #1a1a1a;
+}
+
+/* ===== Vehicle Detail Page ===== */
+
+.vehicle-detail {
+  display: flex;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.vehicle-image {
+  flex: 1;
+}
+
+.vehicle-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+
+.vehicle-info {
+  flex: 1;
+}
+
+.vehicle-info h2 {
+  margin-top: 0;
+  font-size: 1.8rem;
+}
+
+.vehicle-info ul {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.vehicle-info li {
+  margin-bottom: 0.7rem;
+  font-size: 1.1rem;
+}
+
+.vehicle-description {
+  margin-top: 1.5rem;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .vehicle-detail {
+    flex-direction: column;
+  }
+}
+
+
+
 @media (min-width: 768px) {
 
   .home {

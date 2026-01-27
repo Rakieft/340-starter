@@ -4,22 +4,21 @@ const Util = {}
 /* ************************
  * Constructs the nav HTML unordered list
  ************************** */
-Util.getNav = async function (req, res, next) {
-  let data = await invModel.getClassifications()
+Util.getNav = async function () {
+  const data = await invModel.getClassifications()
   let list = "<ul>"
   list += '<li><a href="/" title="Home page">Home</a></li>'
+
   data.rows.forEach((row) => {
-    list += "<li>"
-    list +=
-      '<a href="/inv/type/' +
-      row.classification_id +
-      '" title="See our inventory of ' +
-      row.classification_name +
-      ' vehicles">' +
-      row.classification_name +
-      "</a>"
-    list += "</li>"
+    list += `
+      <li>
+        <a href="/inv/type/${row.classification_id}"
+           title="See our inventory of ${row.classification_name} vehicles">
+          ${row.classification_name}
+        </a>
+      </li>`
   })
+
   list += "</ul>"
   return list
 }
@@ -57,6 +56,44 @@ Util.buildClassificationGrid = async function(data){
     grid += '<p class="notice">Sorry, no matching vehicles could be found.</p>'
   }
   return grid
+}
+
+/* **************************************
+ * Build inventory detail HTML
+ * ************************************ */
+Util.buildInventoryDetail = function (vehicle) {
+  return `
+  <div class="vehicle-detail">
+    <div class="vehicle-image">
+      <img src="${vehicle.inv_image}" 
+           alt="Image of ${vehicle.inv_make} ${vehicle.inv_model}">
+    </div>
+
+    <div class="vehicle-info">
+      <h2>${vehicle.inv_year} ${vehicle.inv_make} ${vehicle.inv_model}</h2>
+
+      <p class="price">
+        <strong>Price:</strong>
+        $${new Intl.NumberFormat("en-US").format(vehicle.inv_price)}
+      </p>
+
+      <p>
+        <strong>Mileage:</strong>
+        ${new Intl.NumberFormat("en-US").format(vehicle.inv_miles)} miles
+      </p>
+
+      <p>
+        <strong>Description:</strong>
+        ${vehicle.inv_description}
+      </p>
+
+      <p>
+        <strong>Color:</strong>
+        ${vehicle.inv_color}
+      </p>
+    </div>
+  </div>
+  `
 }
 
 /* ****************************************
