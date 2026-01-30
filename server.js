@@ -1,22 +1,26 @@
 /* ******************************************
- * This server.js file is the primary file of the 
- * application. It is used to control the project.
+ * server.js
  *******************************************/
 
 /* ***********************
  * Require Statements
  *************************/
+const express = require("express")
+const expressLayouts = require("express-ejs-layouts")
+const session = require("express-session")
+const pool = require("./database/")
+const path = require("path")
+require("dotenv").config()
+
 const inventoryRoute = require("./routes/inventoryRoute")
 const baseController = require("./controllers/baseController")
 const utilities = require("./utilities/")
 const errorRoute = require("./routes/errorRoute")
-const express = require("express")
-const expressLayouts = require("express-ejs-layouts")
-require("dotenv").config()
-const app = express()
 const staticRoutes = require("./routes/static")
-const path = require("path")
+const accountRoute = require("./routes/accountRoute")
+const bodyParser = require("body-parser")
 
+const app = express()
 
 /* ***********************
  * View Engine and Layout
@@ -31,9 +35,38 @@ app.set("layout", "./layouts/layout")
 app.use(express.static("public"))
 
 /* ***********************
- * Middleware
+ * Session Middleware
  *************************/
-app.use(express.static(path.join(__dirname, "public")))
+app.use(session({
+  store: new (require("connect-pg-simple")(session))({
+    createTableIfMissing: true,
+    pool,
+  }),
+  secret: process.env.SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true,
+  name: "sessionId",
+}))
+
+// Express Messages Middleware
+app.use(require('connect-flash')())
+app.use(function(req, res, next){
+  res.locals.messages = require('express-messages')(req, res)
+  next()
+})
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
+
+/* ***********************
+ * Flash & Messages Middleware
+ *************************/
+app.use(require("connect-flash")())
+app.use(function (req, res, next) {
+  res.locals.messages = require("express-messages")(req, res)
+  next()
+})
 
 /* ***********************
  * Routes
@@ -42,52 +75,46 @@ app.use(express.static(path.join(__dirname, "public")))
 // index route
 app.get("/", utilities.handleErrors(baseController.buildHome))
 
-// Inventory routes
+// inventory routes
 app.use("/inv", inventoryRoute)
 
 // static routes
 app.use(staticRoutes)
 
+// account routes
+app.use("/account", accountRoute)
+
 // error route
 app.use("/error", errorRoute)
 
-// File Not Found Route - must be last route in list
+// 404 handler (last route)
 app.use(async (req, res, next) => {
   next({ status: 404, message: "Sorry, we appear to have lost that page." })
 })
 
-
-
 /* ***********************
-* Express Error Handler
-* Place after all other middleware
-*************************/
+ * Express Error Handler
+ *************************/
 app.use(async (err, req, res, next) => {
   let nav = await utilities.getNav()
   console.error(`Error at: "${req.originalUrl}": ${err.message}`)
 
-  let message
-  if (err.status == 404) {
-    message = err.message
-  } else {
-    message = 'Oh no! There was a crash. Maybe try a different route?'
-  }
+  let message =
+    err.status == 404
+      ? err.message
+      : "Oh no! There was a crash. Maybe try a different route?"
 
   res.render("errors/error", {
-    title: err.status || 'Server Error',
+    title: err.status || "Server Error",
     message,
-    nav
+    nav,
   })
 })
 
 /* ***********************
- * Server Information
- *************************/
-const port = process.env.PORT || 3000
-
-/* ***********************
  * Start Server
  *************************/
+const port = process.env.PORT || 3000
 app.listen(port, () => {
   console.log(`App listening on port ${port}`)
 })

@@ -44,6 +44,7 @@
 
 .main-nav {
   background-color: #232635;
+
 }
 
 .nav-list {
@@ -254,6 +255,77 @@
   .vehicle-detail {
     flex-direction: column;
   }
+}
+
+
+.login-form {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 5px;
+}
+
+.login-form label {
+  display: block;
+  margin-top: 10px;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+}
+
+.login-form button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  background: #333;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 15px;
+}
+
+
+.register-form {
+  max-width: 450px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #f4f4f4;
+  border-radius: 5px;
+}
+
+.register-form label {
+  display: block;
+  margin-top: 10px;
+}
+
+.register-form input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+}
+
+.register-form button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  background: #222;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.password-hint {
+  font-size: 0.9em;
+  margin-top: 10px;
+  color: #555;
 }
 
 
