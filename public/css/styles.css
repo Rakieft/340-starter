@@ -328,6 +328,24 @@
   color: #555;
 }
 
+/* footer */
+.site-footer {
+  margin-top: 3rem;
+  padding: 1rem;
+  text-align: center;
+  background-color: #232635;
+  color: #fff;
+}
+
+.site-footer a {
+  color: #00a3c7;
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  text-decoration: underline;
+}
+
 
 
 @media (min-width: 768px) {

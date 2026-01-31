@@ -38,4 +38,99 @@ invCont.buildInventoryDetail = async function (req, res) {
   })
 }
 
+
+/* ***************************
+ *  Build inventory
+ * ************************** */
+invCont.buildManagement = async function (req, res) {
+  const nav = await utilities.getNav()
+  res.render("inventory/management", {
+    title: "Inventory Management",
+    nav,
+    errors: null,
+  })
+}
+
+
+
+/* ***************************
+ *  Build add classification view
+ * ************************** */
+invCont.buildAddClassification = async function (req, res) {
+  const nav = await utilities.getNav()
+  res.render("inventory/add-classification", {
+    title: "Add Classification",
+    nav,
+    errors: null,
+  })
+}
+
+/* ***************************
+ *  Process add classification
+ * ************************** */
+invCont.addClassification = async function (req, res) {
+  const { classification_name } = req.body
+  const result = await invModel.addClassification(classification_name)
+  const nav = await utilities.getNav()
+
+  if (result) {
+    req.flash("notice", "Classification added successfully.")
+    res.render("inventory/management", {
+      title: "Inventory Management",
+      nav,
+      errors: null,
+    })
+  } else {
+    req.flash("notice", "Classification insertion failed.")
+    res.render("inventory/add-classification", {
+      title: "Add Classification",
+      nav,
+      classification_name,
+      errors: null,
+    })
+  }
+}
+
+
+/* ***************************
+ * Build add inventory view
+ * ************************** */
+invCont.buildAddInventory = async function (req, res) {
+  const nav = await utilities.getNav()
+  const classificationList = await utilities.buildClassificationList()
+
+  res.render("inventory/add-inventory", {
+    title: "Add Inventory",
+    nav,
+    classificationList,
+    errors: null,
+  })
+}
+
+/* ***************************
+ * Process add inventory
+ * ************************** */
+invCont.addInventory = async function (req, res) {
+  const nav = await utilities.getNav()
+  const classificationList = await utilities.buildClassificationList(
+    req.body.classification_id
+  )
+
+  const result = await invModel.addInventory(req.body)
+
+  if (result) {
+    req.flash("notice", "Inventory item added successfully.")
+    res.redirect("/inv/")
+  } else {
+    req.flash("notice", "Failed to add inventory item.")
+    res.render("inventory/add-inventory", {
+      title: "Add Inventory",
+      nav,
+      classificationList,
+      errors: null,
+      ...req.body,
+    })
+  }
+}
+
 module.exports = invCont
