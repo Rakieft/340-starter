@@ -43,7 +43,7 @@ router.get(
 
 router.post(
   "/add-inventory",
-  inventoryValidate.inventoryRules(),
+  inventoryValidate.addInventoryRules(),
   inventoryValidate.checkInventoryData,
   utilities.handleErrors(invController.addInventory)
 )

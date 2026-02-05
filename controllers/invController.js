@@ -112,10 +112,6 @@ invCont.buildAddInventory = async function (req, res) {
  * ************************** */
 invCont.addInventory = async function (req, res) {
   const nav = await utilities.getNav()
-  const classificationList = await utilities.buildClassificationList(
-    req.body.classification_id
-  )
-
   const result = await invModel.addInventory(req.body)
 
   if (result) {
@@ -126,7 +122,6 @@ invCont.addInventory = async function (req, res) {
     res.render("inventory/add-inventory", {
       title: "Add Inventory",
       nav,
-      classificationList,
       errors: null,
       ...req.body,
     })
