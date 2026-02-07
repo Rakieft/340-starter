@@ -1,36 +1,39 @@
-// Needed Resources
 const express = require("express")
 const router = new express.Router()
 const invController = require("../controllers/invController")
 const utilities = require("../utilities")
 const classificationValidate = require("../utilities/validation/classification-validation")
 const inventoryValidate = require("../utilities/validation/inventory-validation")
+const { checkLogin, checkEmployee } = require("../utilities/validation/account-middleware")
 
-// Route to build inventory by classification view
+// Public routes
 router.get(
   "/type/:classificationId",
   utilities.handleErrors(invController.buildByClassificationId)
 )
 
-// Route to build inventory detail view
 router.get(
   "/detail/:invId",
   utilities.handleErrors(invController.buildInventoryDetail)
 )
 
-// Route to build inventory management view
 router.get(
   "/",
   utilities.handleErrors(invController.buildManagement)
 )
 
+// Admin-only routes
 router.get(
   "/add-classification",
+  checkLogin,
+  checkEmployee,
   utilities.handleErrors(invController.buildAddClassification)
 )
 
 router.post(
   "/add-classification",
+  checkLogin,
+  checkEmployee,
   classificationValidate.classificationRules(),
   classificationValidate.checkClassificationData,
   utilities.handleErrors(invController.addClassification)
@@ -38,12 +41,16 @@ router.post(
 
 router.get(
   "/add-inventory",
+  checkLogin,
+  checkEmployee,
   utilities.handleErrors(invController.buildAddInventory)
 )
 
 router.post(
   "/add-inventory",
-  inventoryValidate.newInventoryRules(), 
+  checkLogin,
+  checkEmployee,
+  inventoryValidate.newInventoryRules(),
   inventoryValidate.checkInventoryData,
   utilities.handleErrors(invController.addInventory)
 )
@@ -53,16 +60,20 @@ router.get(
   utilities.handleErrors(invController.getInventoryJSON)
 )
 
-// Edit inventory item view
 router.get(
   "/edit/:inv_id",
+  checkLogin,
+  checkEmployee,
   utilities.handleErrors(invController.editInventoryView)
 )
 
 router.post(
   "/update/",
+  checkLogin,
+  checkEmployee,
   inventoryValidate.newInventoryRules(),
   inventoryValidate.checkUpdateData,
   utilities.handleErrors(invController.updateInventory)
 )
+
 module.exports = router
