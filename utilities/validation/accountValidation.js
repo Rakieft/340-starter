@@ -1,6 +1,6 @@
 const { body, validationResult } = require("express-validator")
 
-// Objet principal pour login
+// Objet principal pour login/registration
 const validate = {}
 
 /* *****************************
@@ -10,6 +10,22 @@ validate.loginRules = () => {
   return [
     body("account_email").isEmail().withMessage("A valid email is required."),
     body("account_password").notEmpty().withMessage("Password is required."),
+  ]
+}
+
+/* *****************************
+ * Registration Validation Rules
+ * ***************************** */
+validate.registerRules = () => {
+  return [
+    body("account_firstname").trim().notEmpty().withMessage("First name required"),
+    body("account_lastname").trim().notEmpty().withMessage("Last name required"),
+    body("account_email").trim().isEmail().withMessage("Valid email required"),
+    body("account_password")
+      .isLength({ min: 8 }).withMessage("Password must be at least 8 characters")
+      .matches(/[A-Z]/).withMessage("Password must contain at least one uppercase letter")
+      .matches(/\d/).withMessage("Password must contain at least one number")
+      .matches(/[!@#$%^&*]/).withMessage("Password must contain at least one special character"),
   ]
 }
 
@@ -50,7 +66,9 @@ function updatePasswordRules() {
       .matches(/[A-Z]/)
       .withMessage("Password must contain at least one uppercase letter")
       .matches(/\d/)
-      .withMessage("Password must contain at least one number"),
+      .withMessage("Password must contain at least one number")
+      .matches(/[!@#$%^&*]/)
+      .withMessage("Password must contain at least one special character"),
   ]
 }
 
