@@ -18,7 +18,10 @@ const utilities = require("./utilities/")
 const errorRoute = require("./routes/errorRoute")
 const staticRoutes = require("./routes/static")
 const accountRoute = require("./routes/accountRoute")
+
 const bodyParser = require("body-parser")
+const cookieParser = require("cookie-parser")
+const flash = require("connect-flash")
 
 const app = express()
 
@@ -35,38 +38,39 @@ app.set("layout", "./layouts/layout")
 app.use(express.static("public"))
 
 /* ***********************
- * Session Middleware
+ * Middleware (ORDER MATTERS)
  *************************/
-app.use(session({
-  store: new (require("connect-pg-simple")(session))({
-    createTableIfMissing: true,
-    pool,
-  }),
-  secret: process.env.SESSION_SECRET,
-  resave: true,
-  saveUninitialized: true,
-  name: "sessionId",
-}))
 
-// Express Messages Middleware
-app.use(require('connect-flash')())
-app.use(function(req, res, next){
-  res.locals.messages = require('express-messages')(req, res)
-  next()
-})
+// Parse cookies FIRST
+app.use(cookieParser())
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+// Session middleware
+app.use(
+  session({
+    store: new (require("connect-pg-simple")(session))({
+      createTableIfMissing: true,
+      pool,
+    }),
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    name: "sessionId",
+  })
+)
 
-
-/* ***********************
- * Flash & Messages Middleware
- *************************/
-app.use(require("connect-flash")())
-app.use(function (req, res, next) {
+// Flash messages
+app.use(flash())
+app.use((req, res, next) => {
   res.locals.messages = require("express-messages")(req, res)
   next()
 })
+
+// Body parser
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
+// JWT check AFTER cookies & session
+app.use(utilities.checkJWTToken)
 
 /* ***********************
  * Routes
@@ -87,8 +91,8 @@ app.use("/account", accountRoute)
 // error route
 app.use("/error", errorRoute)
 
-// 404 handler (last route)
-app.use(async (req, res, next) => {
+// 404 handler (LAST ROUTE)
+app.use((req, res, next) => {
   next({ status: 404, message: "Sorry, we appear to have lost that page." })
 })
 
