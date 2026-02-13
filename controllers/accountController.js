@@ -63,8 +63,10 @@ async function accountLogin(req, res) {
   let nav = await utilities.getNav()
   const { account_email, account_password } = req.body
 
+  
   const accountData = await accountModel.getAccountByEmail(account_email)
 
+  
   if (!accountData || account_password !== accountData.account_password) {
     req.flash("error", "Invalid login credentials.")
     return res.render("account/login", {
@@ -75,14 +77,19 @@ async function accountLogin(req, res) {
     })
   }
 
+  
   delete accountData.account_password
 
+ 
   const token = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: "1h",
   })
-
   res.cookie("jwt", token, { httpOnly: true })
-  res.redirect("/account/")
+
+  
+  const redirectUrl = req.session.returnTo || "/account/"
+  delete req.session.returnTo
+  return res.redirect(redirectUrl)
 }
 
 /* ****************************************
@@ -91,10 +98,9 @@ async function accountLogin(req, res) {
 async function buildAccount(req, res) {
   let nav = await utilities.getNav()
   res.render("account/manage", {
-    title: "Account Management",
-    nav,
-    account: res.locals.accountData,
-    errors: null,
+  title: "Account Management",
+  nav,
+  errors: null,
   })
 }
 
