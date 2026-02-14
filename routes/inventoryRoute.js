@@ -19,6 +19,8 @@ router.get(
 
 router.get(
   "/",
+  checkLogin,
+  checkEmployee,
   utilities.handleErrors(invController.buildManagement)
 )
 
