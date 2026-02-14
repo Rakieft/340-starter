@@ -17,23 +17,42 @@
   margin-bottom: 1rem;
 }
 
+/* ===== HEADER ===== */
 .site-header {
-  background-color: #ffffff;
-  border-bottom: 2px solid #e5e5e5;
-}
-
-.header-container {
+  background-color: #1f2937; 
+  color: #fff;
+  padding: 15px 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  flex-wrap: wrap;
 }
 
-.site-title {
+.site-header .site-title {
   margin: 0;
   font-size: 1.8rem;
-  font-weight: bold;
-  color: #000;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.site-header nav {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.site-header nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: all 0.2s ease-in-out;
+}
+
+.site-header nav a:hover {
+  background-color: #2563eb; 
+  color: #fff;
 }
 
 .my-account {
@@ -476,6 +495,83 @@ form button:hover {
 
 .errors li {
   margin-bottom: 0.5rem;
+}
+
+/* ===== FAVORITES LIST ===== */
+ul.favorites-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+ul.favorites-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background-color: #f3f4f6; 
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+ul.favorites-list li strong {
+  font-size: 1.1rem;
+  color: #111827;
+}
+
+ul.favorites-list li a {
+  color: #dc2626; 
+  text-decoration: none;
+  font-weight: 600;
+  padding: 5px 10px;
+  border: 1px solid #dc2626;
+  border-radius: 5px;
+  transition: all 0.2s ease-in-out;
+}
+
+ul.favorites-list li a:hover {
+  background-color: #dc2626;
+  color: #fff;
+}
+
+.btn-favorite {
+  display: inline-block;
+  padding: 8px 12px;
+  background-color: #ff4d4d;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.btn-favorite:hover {
+  background-color: #e60000;
+}
+.flash-notice, .flash-success, .flash-error {
+  margin-top: 10px;
+  padding: 8px;
+  border-radius: 5px;
+}
+
+.flash-notice {
+  background-color: #d1fae5; 
+  color: #065f46;
+  padding: 10px 15px;
+  margin: 10px 0;
+  border-radius: 5px;
+}
+.flash-success { background-color: #b3ffb3; }
+
+.flash-error {
+  background-color: #fee2e2; 
+  color: #b91c1c;
+  padding: 10px 15px;
+  margin: 10px 0;
+  border-radius: 5px;
 }
 
 

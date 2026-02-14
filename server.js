@@ -18,6 +18,7 @@ const utilities = require("./utilities/")
 const errorRoute = require("./routes/errorRoute")
 const staticRoutes = require("./routes/static")
 const accountRoute = require("./routes/accountRoute")
+const favoritesRoute = require("./routes/favoritesRoute")
 
 const bodyParser = require("body-parser")
 const cookieParser = require("cookie-parser")
@@ -72,6 +73,14 @@ app.use(bodyParser.urlencoded({ extended: true }))
 // JWT check AFTER cookies & session
 app.use(utilities.checkJWTToken)
 
+
+// Define global variables for all templates
+app.use((req, res, next) => {
+  res.locals.loggedin = req.session?.loggedin || false
+  res.locals.accountData = req.session?.accountData || null
+  next()
+})
+
 /* ***********************
  * Routes
  *************************/
@@ -90,6 +99,9 @@ app.use("/account", accountRoute)
 
 // error route
 app.use("/error", errorRoute)
+
+// favorite
+app.use("/favorites", favoritesRoute)
 
 // 404 handler (LAST ROUTE)
 app.use((req, res, next) => {

@@ -33,6 +33,21 @@
       <h3>Description</h3>
       <p><%= vehicle.inv_description %></p>
     </div>
+
+
+    <% if (messages && messages().notice) { %>
+        <div class="flash-notice"><%= messages().notice %></div>
+      <% } %>
+
+    <% if (loggedin) { %>
+        <p>
+          <a href="/favorites/add/<%= vehicle.inv_id %>" class="btn-favorite">❤️ Add to Favorites</a>
+        </p>
+      <% } %>
+      <% if (messages && messages().error) { %>
+        <div class="flash-error"><%= messages().error %></div>
+    <% } %>
+
   </div>
 
 </div>

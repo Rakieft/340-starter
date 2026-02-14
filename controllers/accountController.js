@@ -63,10 +63,9 @@ async function accountLogin(req, res) {
   let nav = await utilities.getNav()
   const { account_email, account_password } = req.body
 
-  
   const accountData = await accountModel.getAccountByEmail(account_email)
 
-  
+  // ✅ Comparaison DIRECTE (mot de passe en clair du prof)
   if (!accountData || account_password !== accountData.account_password) {
     req.flash("error", "Invalid login credentials.")
     return res.render("account/login", {
@@ -77,21 +76,23 @@ async function accountLogin(req, res) {
     })
   }
 
-  
+  // Sécurité : ne jamais garder le mot de passe
   delete accountData.account_password
 
- 
+  // JWT
   const token = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: "1h",
   })
   res.cookie("jwt", token, { httpOnly: true })
 
-  
+  // ✅ SESSION (CRITIQUE pour ton header & favorites)
+  req.session.loggedin = true
+  req.session.accountData = accountData
+
   const redirectUrl = req.session.returnTo || "/account/"
   delete req.session.returnTo
   return res.redirect(redirectUrl)
 }
-
 /* ****************************************
  *  Account management view
  * *************************************** */
@@ -151,8 +152,18 @@ async function updatePassword(req, res) {
  *  Logout
  * *************************************** */
 function logout(req, res) {
+  // Supprimer le JWT
   res.clearCookie("jwt")
-  res.redirect("/")
+
+  // Détruire la session
+  req.session.destroy(err => {
+    if (err) {
+      console.error("Session destroy error:", err)
+      return res.redirect("/account/")
+    }
+
+    res.redirect("/")
+  })
 }
 
 module.exports = {
