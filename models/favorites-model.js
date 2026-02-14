@@ -25,7 +25,7 @@ async function getFavoritesByAccount(account_id) {
 }
 
 /* Remove a favorite */
-async function removeFavorite(favorite_id) {
+async function deleteFavorite(favorite_id) {
   const sql = `
     DELETE FROM favorites
     WHERE favorite_id = $1
@@ -36,5 +36,5 @@ async function removeFavorite(favorite_id) {
 module.exports = {
   addFavorite,
   getFavoritesByAccount,
-  removeFavorite,
+  deleteFavorite,
 }
